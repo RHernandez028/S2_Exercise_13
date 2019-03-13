@@ -87,7 +87,11 @@ function init() {
             }
       });
 }
+
+
 function swapPuzzle (e) {
+if (confirm("You will lose all of your work on the puzzle! Continue?")) {
+
       // retrieves the ID of the clicked button
       var puzzleID = e.target.id;
 
@@ -110,6 +114,7 @@ function swapPuzzle (e) {
 
       setupPuzzle();
 }
+}
 
 function setupPuzzle() {
       // match all of the data cells in the puzzle
@@ -126,8 +131,8 @@ function setupPuzzle() {
             puzzleCells[i].style.cursor = "url(jpf_pencil.png), pointer";
       }
       //create object collections of the filled and empty cells
-      var filled = document.querySelectorAll("tabel#hanjieGrid td.filled");
-      var empty = document.querySelectorAll("tabel#hanjieGrid td.empty");
+      var filled = document.querySelectorAll("table#hanjieGrid td.filled");
+      var empty = document.querySelectorAll("table#hanjieGrid td.empty");
 
       //create an event listener to highlight incorrect cells
       document.getElementById("peek").addEventListener("click", function(){
@@ -137,6 +142,41 @@ function setupPuzzle() {
                         filled[i].style.backgroundColor = "rgb(255, 211, 211)";
                   }
             }
+
+            //display incorrect cells in red
+            for (var i = 0; i < empty.length; i++) {
+                  if (empty[i].style.backgroundColor === "rgb(101, 101, 101)") {
+                        empty[i].style.backgroundColor = "rgb(255, 101, 101)";
+                  }  
+            }
+
+            //rmove hints after 0.5 seconds
+            setTimeout(function () {
+                  //change pick cells back to white and red cells to grey
+                  for (var i = 0; i < puzzleCells.length; i++) {
+                        if (puzzleCells[i].style.backgroundColor === "rgb(255, 211, 211)") {
+                              puzzleCells[i].style.backgroundColor = "rgb(255, 255, 255)";
+                        }
+
+                        if (puzzleCells[i].style.backgroundColor === "rgb(255, 101, 101)") {
+                              puzzleCells[i].style.backgroundColor = "rgb(101, 101, 101)";
+                        }
+                  }
+            }, 500);
+      });
+      //check thepuzzle solution
+      document.getElementById("hanjieGrid").addEventListener("mouseup", function (){
+            var solved = true;
+            for (var i = 0; i < puzzleCells.length; i++) {
+                  if ((puzzleCells[i].className === "filled" && puzzleCells[i].style.backgroundColor !== "rgb(101, 101, 101)") || (puzzleCells[i].className === "empty" && puzzleCells[i].style.backgroundColor === "rgb(101, 101, 101)")) {
+                        solved = false;
+                        break;
+                  }
+            }
+            if (solved) {
+                  alert("You solved the puzzle!")
+            }
+
       });
 }
 
